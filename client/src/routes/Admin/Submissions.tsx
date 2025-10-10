@@ -3,7 +3,7 @@ import { api } from '@/lib/api'
 import { useEffect, useMemo, useState } from 'react'
 import { downloadCsv } from '@/lib/csv'
 import ConfirmationDialog from '@/components/ui/ConfirmationDialog'
-import { Search, Filter, Download, Eye, Trash2, Calendar, Building, MapPin, Tag, User, Mail } from 'lucide-react'
+import { Search, Download, Eye, Trash2, Calendar, Building, MapPin, Tag, User } from 'lucide-react'
 
 type Demo = {
   _id: string

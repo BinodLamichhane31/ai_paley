@@ -4,7 +4,7 @@ import { api } from '@/lib/api'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { downloadCsv } from '@/lib/csv'
-import { ArrowLeft, Edit, Download, Users, Calendar, MapPin, Clock, Image as ImageIcon } from 'lucide-react'
+import { ArrowLeft, Edit, Download, Users, Calendar, MapPin, Clock } from 'lucide-react'
 
 type Speaker = { name: string; title?: string; avatarUrl?: string }
 type AgendaItem = { time: string; topic: string }
@@ -31,7 +31,6 @@ export default function EventDetailAdmin() {
   const navigate = useNavigate()
   const qc = useQueryClient()
   const [tab, setTab] = useState<'details' | 'registrations'>('details')
-  const [editEventId, setEditEventId] = useState<string | null>(null)
 
   const { data: event, isLoading } = useQuery({
     queryKey: ['event-admin', id],

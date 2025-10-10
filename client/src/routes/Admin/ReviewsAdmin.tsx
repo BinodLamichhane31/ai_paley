@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useState } from 'react'
 import ConfirmationDialog from '@/components/ui/ConfirmationDialog'
-import { Search, Star, MessageSquare, Calendar, User, Trash2, Eye } from 'lucide-react'
+import { Search, Star, MessageSquare, Calendar, Trash2, Eye } from 'lucide-react'
 
 type Review = { _id: string; eventId: string; rating: number; comment: string; name?: string; createdAt: string }
 

@@ -3,9 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, Plus, X } from 'lucide-react'
 
 type Speaker = { name: string; title?: string }
@@ -26,30 +24,6 @@ type Event = {
   speakers?: Speaker[]; 
   agenda?: AgendaItem[] 
 }
-
-const EventSchema = z.object({
-  title: z.string().min(2, 'Title must be at least 2 characters').max(120, 'Title must be less than 120 characters'),
-  description: z.string().min(10, 'Description must be at least 10 characters').max(5000, 'Description must be less than 5000 characters'),
-  startAt: z.string().min(1, 'Start date is required'),
-  endAt: z.string().min(1, 'End date is required'),
-  location: z.string().min(2, 'Location must be at least 2 characters').max(120, 'Location must be less than 120 characters'),
-  capacity: z.coerce.number().min(1, 'Capacity must be at least 1').optional(),
-  isPublished: z.boolean().default(false),
-  category: z.string().min(1, 'Category is required'),
-  coverImageFile: z.any().optional(),
-  featured: z.boolean().optional(),
-  speakers: z.array(z.object({ 
-    name: z.string().optional(), 
-    title: z.string().optional()
-  })).optional(),
-  agenda: z.array(z.object({ 
-    time: z.string().optional(), 
-    topic: z.string().optional() 
-  })).optional(),
-}).refine((data) => new Date(data.endAt) > new Date(data.startAt), {
-  message: 'End date must be after start date',
-  path: ['endAt']
-})
 
 export default function EventEditAdmin() {
   const { id = '' } = useParams()
@@ -194,7 +168,7 @@ export default function EventEditAdmin() {
 
   const removeSpeaker = (index: number) => {
     const currentSpeakers = form.getValues('speakers') || []
-    form.setValue('speakers', currentSpeakers.filter((_, i) => i !== index))
+    form.setValue('speakers', currentSpeakers.filter((_: any, i: number) => i !== index))
   }
 
   const addAgendaItem = () => {
@@ -204,7 +178,7 @@ export default function EventEditAdmin() {
 
   const removeAgendaItem = (index: number) => {
     const currentAgenda = form.getValues('agenda') || []
-    form.setValue('agenda', currentAgenda.filter((_, i) => i !== index))
+    form.setValue('agenda', currentAgenda.filter((_: any, i: number) => i !== index))
   }
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -265,7 +239,7 @@ export default function EventEditAdmin() {
                 placeholder="Enter event title"
               />
               {form.formState.errors.title && (
-                <p className="text-sm text-red-600 mt-1">{form.formState.errors.title.message}</p>
+                <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.title?.message || '')}</p>
               )}
             </div>
             <div>
@@ -278,7 +252,7 @@ export default function EventEditAdmin() {
                 placeholder="Enter event location"
               />
               {form.formState.errors.location && (
-                <p className="text-sm text-red-600 mt-1">{form.formState.errors.location.message}</p>
+                <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.location?.message || '')}</p>
               )}
             </div>
             <div>
@@ -291,7 +265,7 @@ export default function EventEditAdmin() {
                 className="w-full border rounded-md p-3 focus-ring"
               />
               {form.formState.errors.startAt && (
-                <p className="text-sm text-red-600 mt-1">{form.formState.errors.startAt.message}</p>
+                <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.startAt?.message || '')}</p>
               )}
             </div>
             <div>
@@ -304,7 +278,7 @@ export default function EventEditAdmin() {
                 className="w-full border rounded-md p-3 focus-ring"
               />
               {form.formState.errors.endAt && (
-                <p className="text-sm text-red-600 mt-1">{form.formState.errors.endAt.message}</p>
+                <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.endAt?.message || '')}</p>
               )}
             </div>
           </div>
@@ -320,7 +294,7 @@ export default function EventEditAdmin() {
               placeholder="Describe your event..."
             />
             {form.formState.errors.description && (
-              <p className="text-sm text-red-600 mt-1">{form.formState.errors.description.message}</p>
+              <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.description?.message || '')}</p>
             )}
           </div>
 
@@ -336,7 +310,7 @@ export default function EventEditAdmin() {
                 placeholder="Maximum attendees"
               />
               {form.formState.errors.capacity && (
-                <p className="text-sm text-red-600 mt-1">{form.formState.errors.capacity.message}</p>
+                <p className="text-sm text-red-600 mt-1">{String(form.formState.errors.capacity?.message || '')}</p>
               )}
             </div>
             <div>
@@ -411,7 +385,7 @@ export default function EventEditAdmin() {
                 Add Speaker
               </button>
             </div>
-            {form.watch('speakers')?.map((speaker, index) => (
+            {form.watch('speakers')?.map((_: any, index: number) => (
               <div key={index} className="border rounded-md p-4 mb-3">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium">Speaker {index + 1}</span>
@@ -456,7 +430,7 @@ export default function EventEditAdmin() {
                 Add Item
               </button>
             </div>
-            {form.watch('agenda')?.map((item, index) => (
+            {form.watch('agenda')?.map((_: any, index: number) => (
               <div key={index} className="border rounded-md p-4 mb-3">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium">Agenda Item {index + 1}</span>

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { X, AlertTriangle } from 'lucide-react'
 
 interface ConfirmationDialogProps {
@@ -69,11 +69,11 @@ export default function ConfirmationDialog({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800">
+      <div className="relative w-full max-w-md bg-white border shadow-xl dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-800">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="absolute p-1 transition-colors rounded-md top-4 right-4 hover:bg-slate-100 dark:hover:bg-slate-800"
           disabled={isLoading}
         >
           <X className="w-4 h-4" />
@@ -87,12 +87,12 @@ export default function ConfirmationDialog({
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-semibold text-center text-slate-900 dark:text-slate-100 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-center text-slate-900 dark:text-slate-100">
             {title}
           </h3>
 
           {/* Message */}
-          <p className="text-sm text-center text-slate-600 dark:text-slate-400 mb-6">
+          <p className="mb-6 text-sm text-center text-slate-600 dark:text-slate-400">
             {message}
           </p>
 
@@ -108,7 +108,7 @@ export default function ConfirmationDialog({
             <button
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium transition-colors bg-white border rounded-md text-slate-700 dark:text-slate-300 dark:bg-slate-800 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelText}
             </button>
@@ -119,7 +119,7 @@ export default function ConfirmationDialog({
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin" />
                   Loading...
                 </div>
               ) : (

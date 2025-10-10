@@ -248,7 +248,7 @@ function InterestChart({ data }: { data: Stats['topInterests'] }) {
   
   return (
     <div className="space-y-3">
-      {data.slice(0, 5).map((interest, index) => {
+      {data.slice(0, 5).map((interest) => {
         const percentage = (interest.count / maxValue) * 100
         return (
           <div key={interest.label} className="space-y-1">

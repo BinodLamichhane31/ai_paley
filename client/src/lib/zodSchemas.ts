@@ -17,9 +17,10 @@ export const DemoRequestSchema = z.object({
     .max(120, 'Company name must be less than 120 characters'),
   country: z.string()
     .min(1, 'Please select a country'),
-  interestArea: z.enum(['AI Assistant', 'Automation', 'Analytics', 'Other'], {
-    errorMap: () => ({ message: 'Please select an area of interest' })
-  }),
+  interestArea: z.enum(['AI Assistant', 'Automation', 'Analytics', 'Other']).refine(
+    (val) => ['AI Assistant', 'Automation', 'Analytics', 'Other'].includes(val),
+    { message: 'Please select an area of interest' }
+  ),
   message: z.string()
     .max(1000, 'Message must be less than 1000 characters')
     .optional(),

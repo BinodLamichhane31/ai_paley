@@ -46,6 +46,7 @@ export default function App() {
           <Route path="events/:id" element={<EventDetailAdmin />} />
           <Route path="events/:id/edit" element={<EventEditAdmin />} />
           <Route path="reviews" element={<ReviewsAdmin />} />
+          <Route path="analytics" element={<Analytics />} />
         </Route>
       </Route>
     </Routes>

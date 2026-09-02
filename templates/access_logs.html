@@ -1,0 +1,62 @@
+{% extends "nav.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h2>Access Logs</h2>
+        <p>Recent vehicle access and dispatch history</p>
+    </div>
+    
+    <table class="vehicles-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Plate Number</th>
+                <th>Vehicle Type</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>
+                    {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                </td>
+                <td>
+                    {{ log.plate_number }}
+                </td>
+                <td>
+                    {{ log.vehicle_details.vehicle_type }}
+                </td>
+                <td>
+                    {{ log.vehicle_details.owner_name }}
+                </td>
+                <td>
+                    <div class="flex items-center">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            Access Granted
+                        </span>
+                        <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            Dispatched
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <a href="{{ url_for('vehicle.manage_vehicle', id=log.vehicle_id) }}" 
+                       class="btn btn-view">View Vehicle</a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not logs %}
+            <tr>
+                <td colspan="6" class="text-center">
+                    <p>No access logs found</p>
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

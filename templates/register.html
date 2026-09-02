@@ -1,0 +1,160 @@
+{% extends "nav.html" %}
+{% block content %}
+    <main class="container">
+      <form class="registration-form" id="registration-form">
+        <h2 class="form-title">Register New Vehicle</h2>
+
+        <div class="form-group">
+          <label for="ownerName">Owner Name</label>
+          <input type="text" id="ownerName" name="owner_name" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="vehicleType">Vehicle Type</label>
+          <select id="vehicleType" name="vehicle_type" class="form-control" required>
+            <option value="">Select vehicle type</option>
+            <option value="car">Car</option>
+            <option value="motorcycle">Motorcycle</option>
+            <option value="truck">Truck</option>
+            <option value="bus">Bus</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>License Plate Image</label>
+          <div class="file-input-group">
+            <label class="choose-file-btn">
+              <input
+                type="file"
+                name="plate_image"
+                accept="image/*"
+                style="display: none"
+                required
+              />
+              Choose File
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea name="notes" id="notes" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Register Vehicle</button>
+      </form>
+    </main>
+    <script>
+      // registration.js
+
+document.getElementById('registration-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // Disable submit button to prevent double submission
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.innerHTML = '<span class="spinner"></span> Registering...';
+  
+  const formData = new FormData(e.target);
+  
+  try {
+      const response = await fetch('/register', {
+          method: 'POST',
+          body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+          Swal.fire({
+              icon: 'success',
+              title: 'Vehicle Registered Successfully',
+              text: `Plate Number: ${data.plate_number}`,
+              confirmButtonText: 'View All Vehicles',
+              showCancelButton: true,
+              cancelButtonText: 'Register Another'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  window.location.href = '/vehicles';
+              } else {
+                  // Reset form for new registration
+                  e.target.reset();
+              }
+          });
+      } else {
+          // Show specific error message
+          Swal.fire({
+              icon: 'error',
+              title: 'Registration Failed',
+              text: data.error || 'An unexpected error occurred'
+          });
+      }
+  } catch (error) {
+      console.error('Registration error:', error);
+      Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: 'Unable to connect to the server. Please try again.'
+      });
+  } finally {
+      // Re-enable submit button
+      submitButton.disabled = false;
+      submitButton.innerHTML = 'Register Vehicle';
+  }
+});
+
+// Add client-side validation
+function validateForm() {
+  const ownerName = document.querySelector('[name="owner_name"]').value.trim();
+  const vehicleType = document.querySelector('[name="vehicle_type"]').value;
+  const plateImage = document.querySelector('[name="plate_image"]').files[0];
+  
+  if (!ownerName) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Missing Information',
+          text: 'Please enter the owner name'
+      });
+      return false;
+  }
+  
+  if (!vehicleType) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Missing Information',
+          text: 'Please select a vehicle type'
+      });
+      return false;
+  }
+  
+  if (!plateImage) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Missing Information',
+          text: 'Please upload a license plate image'
+      });
+      return false;
+  }
+  
+  return true;
+}
+
+// Add image preview
+document.querySelector('[name="plate_image"]').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+          const preview = document.createElement('img');
+          preview.src = e.target.result;
+          preview.className = 'mt-2 max-w-full h-auto rounded-lg';
+          
+          const previewContainer = document.getElementById('image-preview');
+          previewContainer.innerHTML = '';
+          previewContainer.appendChild(preview);
+      }
+      reader.readAsDataURL(file);
+  }
+});
+</script>
+{% endblock %}

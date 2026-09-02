@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"  href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>AIPALE</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1 class="heading">AIPALE</h1>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/register">Register</a>
+        <a href="/vehicles">Vehicle</a>
+        <a href="/access_logs">Access Logs</a>
+        <a href="/video_feed">Detect</a>
+        <a href="/generate_visitor_token">Generate Token</a>
+        <a href="/validate_visitor_token">Validate Token</a>
+        <a href="/visitor_logs">Visitor logs</a>
+        <a href="/logout">Logout</a>
+      </div>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+
+{% extends "nav.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h2>Recent Visitor Logs</h2>
+    </div>
+    <table class="vehicles-table">
+        <thead>
+            <tr>
+                <th>Visitor Name</th>
+                <th>Contact</th>
+                <th>Purpose</th>
+                <th>Created At</th>
+                <th>Expires At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.visitor_name }}</td>
+                <td>{{ log.visitor_contact }}</td>
+                <td>{{ log.vehicle_purpose }}</td>
+                <td>{{ log.created_at }}</td>
+                <td>{{ log.expires_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endblock %}

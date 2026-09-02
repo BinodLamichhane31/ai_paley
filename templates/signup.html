@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <title>AIPALE</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+
+
+<body>
+
+    <div class="login-container-main">
+        <div class="login-container">
+            <center>
+                <dotlottie-player src="https://lottie.host/2cdd478a-b692-457d-8b26-5cdd1a48b54b/e7eLoRBcS0.lottie"
+                    background="transparent" speed="1" style="width: 300px; height: 260px" loop
+                    autoplay></dotlottie-player>
+            </center>
+            <form id="signupForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                </div>
+                <div id="errorMessage" class="text-danger mb-3" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                <div class="lgn-btn">
+                    <center> <a href="{{ url_for('auth.login') }}">Already have an account? Login</a></center>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        // Client-side password validation
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm_password');
+        const errorMsg = document.getElementById('errorMessage');
+
+        if (password !== confirmPassword) {
+            errorMsg.textContent = 'Passwords do not match';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        fetch('{{ url_for("auth.signup") }}', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Account Register Success',
+                        confirmButtonText: 'Login Now',
+                        // showCancelButton: true,
+                        // cancelButtonText: 'Register Another'
+                    }).then((result) => {
+
+                        window.location.href = '/vehicles';
+
+                    })
+
+                }
+                else {
+                    errorMsg.textContent = data.error;
+                    errorMsg.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+</html>

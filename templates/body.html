@@ -1,0 +1,32 @@
+{% extends "nav.html" %}
+
+{% block content %}
+
+    <div class="container">
+      <section class="stats-section">
+        <h2>All Activity</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total Registerd Vehicles</h3>
+            <p>{{ vehicles_count }}</p>
+          </div>
+          <div class="stat-card">
+            <h3>Total Registed Vehicle Accessed</h3>
+            <p>{{ today_access }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-section">
+        <h2>Recent Activity</h2>
+        <div class="stats-grid">
+          {% for log in recent_logs %}
+          <div class="stat-card">
+            <p>Last vehicle registered: {{ log.plate_number }}</p>
+            <p>TimeStamp: {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+    {% endblock %} 

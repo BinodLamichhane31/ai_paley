@@ -1,0 +1,71 @@
+{% extends "nav.html" %}
+{% block content %}
+<div class="container">
+    <form id="visitorTokenForm" class="registration-form" action="/generate_visitor_token" method="POST">
+        <h2 class="form-title">Generate Visitor Token</h2>
+        <div class="form-group">
+            <label for="visitorName">Visitor Name</label>
+            <input type="text" name="visitor_name" class="form-control" placeholder="Visitor Name" required>
+        </div>
+        <div class="form-group">
+            <label for="visitorContact" >Visitor Name</label>
+            <input type="text" name="visitor_contact" class="form-control" placeholder="Contact Number" required>
+        </div>
+        <div class="form-group">
+            <label for="visitorType">Visitor Type</label>
+            <select name="vehicle_purpose" class="form-control" required>
+                <option value="">Select Visitor</option>
+                <option value="delivery">Guest</option>
+                <option value="meeting">Friend</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <button type="submit" class="submit-btn">Generate Token</button>
+        <div id="tokenDisplay" style="display:none;">
+            <h3>Your Access Token:</h3>
+            <p id="generatedToken"></p>
+            <p>Valid for 24 hours</p>
+        </div>
+    </form>
+    <br>
+    <table class="vehicles-table">
+        <thead>
+            <tr>
+                <th>Visitor Name</th>
+                <th>Purpose</th>
+                <th>Created At</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for token in recent_tokens %}
+            <tr>
+                <td>{{ token.visitor_name }}</td>
+                <td>{{ token.vehicle_purpose }}</td>
+                <td>{{ token.created_at }}</td>
+                <td>{{ token.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.getElementById('visitorTokenForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    fetch('/generate_visitor_token', {
+        method: 'POST',
+        body: new FormData(e.target)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('generatedToken').textContent = data.visitor_token;
+            document.getElementById('tokenDisplay').style.display = 'block';
+        } else {
+            alert(data.error);
+        }
+    });
+});
+</script>
+{% endblock %}

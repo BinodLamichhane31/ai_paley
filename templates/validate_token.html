@@ -1,0 +1,60 @@
+{% extends "nav.html" %}
+{% block content %}
+<div class="container">
+    <form id="validateTokenForm" class="registration-form" action="/validate_visitor_token" method="POST">
+        <h2 class="form-title">Validate Visitor Token</h2>
+        <div class="form-group">
+            <label for="validateToken">Enter Your Token</label>
+            <input type="text" class="form-control" name="visitor_token" placeholder="Enter Token" required>
+        </div>
+        <button type="submit" class="submit-btn">Validate Token</button>
+        <div id="validationResult" style="display:none;">
+            <h3>Access Details</h3>
+            <p id="visitorName"></p>
+            <p id="visitorPurpose"></p>
+            <p id="accessCount"></p>
+        </div>
+    </form>
+
+    <div id="validationResult" style="display:none;">
+        <h3>Access Details</h3>
+        <p id="visitorName"></p>
+        <p id="visitorPurpose"></p>
+        <p id="accessCount"></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('validateTokenForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        fetch('/validate_visitor_token', {
+            method: 'POST',
+            body: new FormData(e.target)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('visitorName').textContent = 'Name: ' + data.visitor_name;
+                    document.getElementById('visitorPurpose').textContent = 'Purpose: ' + data.vehicle_purpose;
+                    document.getElementById('accessCount').textContent = 'Access Count: ' + data.access_count;
+                    document.getElementById('validationResult').style.display = 'block';
+
+                    // Optional: Show additional message for final access
+                    if (data.message === 'Final Access') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'About Token Validity',
+                            text: 'This is your final access. Token will be Invalide.'
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'About Token Validity',
+                            text: 'Invalide or Expired'
+                        });
+                }
+            });
+    });
+</script>
+{% endblock %}

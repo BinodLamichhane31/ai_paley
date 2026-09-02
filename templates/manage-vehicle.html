@@ -1,0 +1,89 @@
+{% extends "nav.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h2>Registered Vehicles</h2>
+    <a href="/register" class="add-vehicle-btn">Register New Vehicle</a>
+  </div>
+
+  <table class="vehicles-table">
+    <thead>
+      <tr>
+        <th>License Plate</th>
+        <th>Owner</th>
+        <th>Vehicle Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vehicle in vehicles %}
+      <tr>
+        <td>
+          <img src="data:image/jpeg;base64,{{ vehicle.image }}" alt="{{vehicle.plate_number }}"
+            class="license-plate-img" />
+          <div>
+            {{vehicle.plate_number }}
+          </div>
+        </td>
+        <td>{{ vehicle.owner_name }}</td>
+        <td>{{ vehicle.vehicle_type }}</td>
+        <td><span class="status-badge 
+              {% if vehicle.status == 'active' %}
+                status-active
+              {% else %}
+                status-inactive
+              {% endif %}">{{ vehicle.status }}</span></td>
+        <td class="action-buttons">
+          <button onclick="viewDetails('{{ vehicle._id }}')" class="btn btn-view">View</button>
+          <button onclick="deleteVehicle('{{ vehicle._id }}')"
+            class="btn btn-delete text-red-600 hover:text-red-900">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+  async function deleteVehicle(id) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "This action cannot be undone",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`/vehicle/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          Swal.fire(
+            'Deleted!',
+            'Vehicle has been removed.',
+            'success'
+          ).then(() => {
+            window.location.reload();
+          });
+        }
+      } catch (error) {
+        Swal.fire(
+          'Error',
+          'Failed to delete vehicle',
+          'error'
+        );
+      }
+    }
+  }
+
+  function viewDetails(id) {
+    window.location.href = `/vehicle/${id}`;
+  }
+</script>
+{% endblock %}
